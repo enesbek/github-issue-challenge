@@ -1,37 +1,30 @@
 import "../app/globals.css";
+import React, { useState } from "react";
 import IssueTable from "@/components/issueTable";
-import { getServerSideProps } from "./api/githubData";
-import React from "react";
+import { fetchIssuesByFilter, getServerSideProps } from "./api/githubData";
 
-const Home = ({ issues, openedCount, closedCount, labels }) => {
-  const [selectedLabel, setSelectedLabel] = React.useState(null);
-  const [issuesData, setIssuesData] = React.useState(issues);
-  console.log(issuesData);
-  // Dropdown bileşeninde seçim değiştiğinde çalışacak fonksiyon
-  const handleSelectionChange = (selectedItem) => {
-    // Seçilen öğeye göre issues verisini filtreleyin veya güncelleyin
-    console.log(selectedItem.anchorKey, issues);
-    if (selectedItem) {
-      const filteredIssues = issues.filter((issue) =>
-        issue.labels.some((label) => label.name === selectedItem.anchorKey)
-      );
+const Home = ({ initialIssues, openedCount, closedCount, labels, authors }) => {
+  const [issues, setIssues] = useState(initialIssues);
 
-      setIssuesData(filteredIssues);
-    } else {
-      setIssuesData(initialIssues);
+  const handleFilterChange = async (filter) => {
+    try {
+      const filteredIssues = await fetchIssuesByFilter(filter);
+
+      setIssues(filteredIssues);
+    } catch (error) {
+      console.error("Error fetching filtered issues:", error);
     }
-    setSelectedLabel(selectedItem);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-1">
       <IssueTable
-        issues={issuesData}
+        issues={issues}
         openedCount={openedCount}
         closedCount={closedCount}
         labels={labels}
-        onSelectionChange={handleSelectionChange}
-        initialSelectedItem={selectedLabel}
+        authors={authors}
+        filterIssues={handleFilterChange}
       />
     </div>
   );

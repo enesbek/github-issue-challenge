@@ -11,45 +11,38 @@ import {
   Button,
   DropdownMenu,
   DropdownItem,
+  Avatar,
 } from "@nextui-org/react";
 import IssueRow from "./issueRow";
 import IssueOpenIcon from "@/assets/issueOpenIcon";
 import IssueClosedIcon from "@/assets/issueClosedIcon";
 import { DownIcon } from "@/assets/DownIcon";
 import Label from "./Label";
+import "./issue.css";
 
 const IssueTable = ({
   issues,
   openedCount,
   closedCount,
   labels,
-  onSelectionChange,
-  initialSelectedItem,
+  authors,
+  filterIssues,
 }) => {
-  const [selectedLabel, setSelectedLabel] = useState(initialSelectedItem);
-  const [filteredIssues, setFilteredIssues] = useState(issues);
-
-  // Dropdown bileşeninde seçim değiştiğinde çalışacak fonksiyon
-  const handleSelectionChange = (selectedItem) => {
-    setSelectedLabel(selectedItem);
-    // Seçilen etikete göre filtreleme yap
-    filterIssues(selectedItem);
-    // Ana bileşene seçilen öğeyi ileterek işlem yapmasını sağlayın
-    onSelectionChange(selectedItem);
+  console.log(authors);
+  const handleLabelSelection = (selectedItem) => {
+    const filter = {
+      type: "Label",
+      value: selectedItem.currentKey,
+    };
+    filterIssues(filter);
   };
 
-  // Etikete göre verileri filtreleyen fonksiyon
-  const filterIssues = (selectedItem) => {
-    if (!selectedItem) {
-      // Seçili etiket yoksa tüm verileri göster
-      setFilteredIssues(issues);
-    } else {
-      // Seçili etikete göre filtreleme yap
-      const filtered = issues.filter((issue) =>
-        issue.labels.some((label) => label.name === selectedItem.anchorKey)
-      );
-      setFilteredIssues(filtered);
-    }
+  const handleAuthorSelection = (selectedItem) => {
+    const filter = {
+      type: "Author",
+      value: selectedItem.currentKey,
+    };
+    filterIssues(filter);
   };
 
   return (
@@ -83,6 +76,27 @@ const IssueTable = ({
                   Author
                 </Button>
               </DropdownTrigger>
+              <DropdownMenu
+                aria-label="Author Dropdown"
+                selectionMode="single"
+                onSelectionChange={handleAuthorSelection}
+                shouldBlockScroll={true}
+                items={authors}
+                className="max-h-[500px] h-fit overflow-auto"
+              >
+                {(item) => (
+                  <DropdownItem key={item.login} className="text-black">
+                    <div className="flex">
+                      <Avatar
+                        src={item.avatar_url}
+                        size="sm"
+                        className="w-6 h-6 cursor-pointer mr-2"
+                      />
+                      {item.login}
+                    </div>
+                  </DropdownItem>
+                )}
+              </DropdownMenu>
             </Dropdown>
             <Dropdown>
               <DropdownTrigger>
@@ -96,9 +110,8 @@ const IssueTable = ({
               </DropdownTrigger>
               <DropdownMenu
                 aria-label="Label Dropdown"
-                selectedKeys={selectedLabel ? [selectedLabel.id] : []}
                 selectionMode="single"
-                onSelectionChange={handleSelectionChange}
+                onSelectionChange={handleLabelSelection}
                 shouldBlockScroll={true}
                 items={labels}
                 className="max-h-[500px] h-fit overflow-auto"
@@ -143,7 +156,7 @@ const IssueTable = ({
         </TableColumn>
       </TableHeader>
       <TableBody emptyContent={"No issues found"}>
-        {filteredIssues.map((issue) => (
+        {issues.map((issue) => (
           <TableRow
             key={issue.id}
             className="border-1 border-[rgb(208, 215, 222)]"

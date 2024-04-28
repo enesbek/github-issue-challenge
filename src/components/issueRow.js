@@ -44,7 +44,6 @@ const IssueRow = ({ issue }) => {
               placement="bottom-end"
               offset={1}
               onClick={() => {
-                console.log("asd", assignee.html_url);
                 history.push(assignee.html_url);
                 window.location.href = assignee.html_url;
               }}
