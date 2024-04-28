@@ -89,7 +89,10 @@ const IssueTable = ({
                 className="max-h-[500px] h-fit overflow-auto"
               >
                 {(item) => (
-                  <DropdownItem key={item.login} className="text-black">
+                  <DropdownItem
+                    key={item.login}
+                    className="text-black"
+                  >
                     <div className="flex">
                       <Avatar
                         src={item.avatar_url}

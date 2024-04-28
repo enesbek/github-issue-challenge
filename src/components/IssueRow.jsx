@@ -15,7 +15,7 @@ const IssueRow = ({ issue }) => {
         <div>
           <div className="flex items-center">
             <a
-              className="text-[#1f2328] text-[16px] font-semibold"
+              className="text-text_black text-[16px] font-semibold"
               style={{ marginRight: "4px" }}
               href={issue.html_url}
             >
@@ -38,7 +38,7 @@ const IssueRow = ({ issue }) => {
         <div style={{ flex: "1", display: "flex", justifyContent: "flex-end" }}>
           {issue.assignees.map((assignee) => (
             <Tooltip
-              className="bg-[#1f2328] text-xs"
+              className="bg-black_text text-xs"
               content={`Assigned to ${assignee.login}`}
               key={assignee.id}
               placement="bottom-end"
