@@ -13,9 +13,9 @@ import {
   DropdownItem,
   Avatar,
 } from "@nextui-org/react";
-import IssueRow from "./issueRow";
-import IssueOpenIcon from "@/assets/issueOpenIcon";
-import IssueClosedIcon from "@/assets/issueClosedIcon";
+import IssueRow from "./IssueRow";
+import IssueOpenIcon from "@/assets/IssueOpenIcon";
+import IssueClosedIcon from "@/assets/IssueClosedIcon";
 import { DownIcon } from "@/assets/DownIcon";
 import Label from "./Label";
 import "./issue.css";
@@ -60,22 +60,22 @@ const IssueTable = ({
       <TableHeader>
         <TableColumn className="flex justify-between h-14">
           <div className="flex px-1 items-center issue_total_info">
-            <div className="flex text-[#1f2328] font-semibold text-[14px] gap-2">
+            <div className="flex text-black_text font-semibold text-[14px] gap-2">
               <IssueOpenIcon fill="1F2328" />
               {openedCount} Open &nbsp;
             </div>
-            <div className="flex text-[#636C76] font-semibold text-[14px] gap-2 ml-2">
+            <div className="flex text-grey_text font-semibold text-[14px] gap-2 ml-2">
               <IssueClosedIcon fill="#636C76" />
               {closedCount} Closed &nbsp;
             </div>
           </div>
-          <div className="flex items-center text-[#636C76]">
+          <div className="flex items-center text-grey_text">
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button
                   endContent={<DownIcon className="text-small" />}
                   variant="flat"
-                  className="bg- mx-0 px-0 ml-4 text-[#636C76]"
+                  className="bg- mx-0 px-0 ml-4 text-grey_text"
                 >
                   Author
                 </Button>
@@ -107,7 +107,7 @@ const IssueTable = ({
                 <Button
                   endContent={<DownIcon className="text-small" />}
                   variant="flat"
-                  className="bg- mx-0 px-0 ml-4 text-[#636C76]"
+                  className="bg- mx-0 px-0 ml-4 text-grey_text"
                 >
                   Label
                 </Button>
@@ -131,21 +131,21 @@ const IssueTable = ({
               endContent={<DownIcon className="text-small" />}
               variant="flat"
               bordered={false}
-              className="bg- mx-0 px-0 ml-4 text-[#636C76]"
+              className="bg- mx-0 px-0 ml-4 text-grey_text"
             >
               Projects
             </Button>
             <Button
               endContent={<DownIcon className="text-small" />}
               variant="flat"
-              className="bg- mx-0 px-0 ml-4 text-[#636C76]"
+              className="bg- mx-0 px-0 ml-4 text-grey_text"
             >
               Milestones
             </Button>
             <Button
               endContent={<DownIcon className="text-small" />}
               variant="flat"
-              className="bg- mx-0 px-0 ml-4 text-[#636C76]"
+              className="bg- mx-0 px-0 ml-4 text-grey_text"
             >
               Assignee
             </Button>
@@ -154,7 +154,7 @@ const IssueTable = ({
                 <Button
                   endContent={<DownIcon className="text-small" />}
                   variant="flat"
-                  className="bg- mx-0 px-0 ml-4 text-[#636C76]"
+                  className="bg- mx-0 px-0 ml-4 text-grey_text"
                 >
                   Sort
                 </Button>

@@ -1,8 +1,8 @@
 import { Avatar, Tooltip } from "@nextui-org/react";
 import React from "react";
 import "./issue.css";
-import CommentIcon from "../assets/commentIcon";
-import IssueOpenIcon from "@/assets/issueOpenIcon";
+import CommentIcon from "@/assets/CommentIcon";
+import IssueOpenIcon from "@/assets/IssueOpenIcon";
 import Label from "./Label";
 
 const IssueRow = ({ issue }) => {
@@ -26,7 +26,7 @@ const IssueRow = ({ issue }) => {
             ))}
           </div>
           <div>
-            <p className="text-[#636C76] text-xs mt-2">
+            <p className="text-grey_text text-xs mt-2">
               #{issue.number} {getTimeDifference(issue.created_at)}
               <span> by</span> {issue.user.login}
             </p>
@@ -59,7 +59,7 @@ const IssueRow = ({ issue }) => {
           ))}
         </div>
         <div
-          className="text-[#636c76]"
+          className="text-grey_text"
           style={{ flex: "1", display: "flex", justifyContent: "flex-end" }}
         >
           {issue.comments > 0 && (

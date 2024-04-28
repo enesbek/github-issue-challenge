@@ -26,7 +26,7 @@ const Home = ({ initialIssues, openedCount, closedCount, labels, authors }) => {
 
       setIssues(sortedIssues);
     } catch (error) {
-      console.error("Error fetching filtered issues:", error);
+      console.error("Error fetching sorted issues:", error);
     }
   };
 
