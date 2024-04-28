@@ -1,0 +1,12 @@
+.label {
+}
+
+a:hover {
+  color: #0969da;
+}
+
+@media (max-width: 850px) {
+  .issue_total_info {
+    display: none;
+  }
+}
