@@ -3,61 +3,6 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import IssueTable from "@/components/IssueTable";
 
 describe("IssueTable component", () => {
-  const issues = MockIssues;
-  const openedCount = 10;
-  const closedCount = 5;
-  const labels = MockLabels;
-
-  test("Render table with correct opened closed counts", () => {
-    render(
-      <IssueTable
-        issues={issues}
-        openedCount={openedCount}
-        closedCount={closedCount}
-        labels={labels}
-      />
-    );
-
-    const openedCountText = screen.getByText(`${openedCount} Open`);
-    const closedCountText = screen.getByText(`${closedCount} Closed`);
-    expect(openedCountText).toBeInTheDocument();
-    expect(closedCountText).toBeInTheDocument();
-  });
-
-  test("Render table header dropdowns", () => {
-    render(
-      <IssueTable
-        issues={issues}
-        openedCount={openedCount}
-        closedCount={closedCount}
-        labels={labels}
-      />
-    );
-
-    const labelButton = screen.getByText("Label");
-    fireEvent.click(labelButton);
-
-    // Control dropdown element
-    const dropdownMenu = screen.getByText(MockLabels[1].name);
-    expect(dropdownMenu).toBeInTheDocument();
-  });
-
-  test("Render issue", () => {
-    render(
-      <IssueTable
-        issues={issues}
-        openedCount={openedCount}
-        closedCount={closedCount}
-        labels={labels}
-      />
-    );
-
-    issues.forEach((issue) => {
-      const issueTitle = screen.getByText(issue.title);
-      expect(issueTitle).toBeInTheDocument();
-    });
-  });
-
   const MockIssues = [
     {
       id: 1,
@@ -123,4 +68,58 @@ describe("IssueTable component", () => {
       default: false,
     },
   ];
+  const issues = MockIssues;
+  const openedCount = 10;
+  const closedCount = 5;
+  const labels = MockLabels;
+
+  test("Render table with correct opened closed counts", () => {
+    render(
+      <IssueTable
+        issues={issues}
+        openedCount={openedCount}
+        closedCount={closedCount}
+        labels={labels}
+      />
+    );
+
+    const openedCountText = screen.getByText(`${openedCount} Open`);
+    const closedCountText = screen.getByText(`${closedCount} Closed`);
+    expect(openedCountText).toBeInTheDocument();
+    expect(closedCountText).toBeInTheDocument();
+  });
+
+  test("Render table header dropdowns", () => {
+    render(
+      <IssueTable
+        issues={issues}
+        openedCount={openedCount}
+        closedCount={closedCount}
+        labels={labels}
+      />
+    );
+
+    const labelButton = screen.getByText("Label");
+    fireEvent.click(labelButton);
+
+    // Control dropdown element
+    const dropdownMenu = screen.getByText(MockLabels[1].name);
+    expect(dropdownMenu).toBeInTheDocument();
+  });
+
+  test("Render issue", () => {
+    render(
+      <IssueTable
+        issues={issues}
+        openedCount={openedCount}
+        closedCount={closedCount}
+        labels={labels}
+      />
+    );
+
+    issues.forEach((issue) => {
+      const issueTitle = screen.getByText(issue.title);
+      expect(issueTitle).toBeInTheDocument();
+    });
+  });
 });
