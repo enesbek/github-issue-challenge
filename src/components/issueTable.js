@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Table,
   TableHeader,
@@ -27,8 +27,8 @@ const IssueTable = ({
   labels,
   authors,
   filterIssues,
+  sortIssues,
 }) => {
-  console.log(authors);
   const handleLabelSelection = (selectedItem) => {
     const filter = {
       type: "Label",
@@ -45,9 +45,13 @@ const IssueTable = ({
     filterIssues(filter);
   };
 
+  const handleSortSelection = (selectedSort) => {
+    sortIssues(selectedSort.currentKey);
+  };
+
   return (
     <Table
-      aria-label="Example static collection table"
+      aria-label="Github Issue Table"
       className="text-black max-w-[1200px] my-20"
       selectionMode="single"
       bordered={false}
@@ -145,13 +149,34 @@ const IssueTable = ({
             >
               Assignee
             </Button>
-            <Button
-              endContent={<DownIcon className="text-small" />}
-              variant="flat"
-              className="bg- mx-0 px-0 ml-4 text-[#636C76]"
-            >
-              Sort
-            </Button>
+            <Dropdown>
+              <DropdownTrigger>
+                <Button
+                  endContent={<DownIcon className="text-small" />}
+                  variant="flat"
+                  className="bg- mx-0 px-0 ml-4 text-[#636C76]"
+                >
+                  Sort
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label="Sort Dropdown"
+                selectionMode="single"
+                onSelectionChange={handleSortSelection}
+                shouldBlockScroll={true}
+                className="max-h-[500px] h-fit overflow-auto"
+              >
+                <DropdownItem key="created" className="text-black">
+                  Newest
+                </DropdownItem>
+                <DropdownItem key="updated" className="text-black">
+                  Recently updated
+                </DropdownItem>
+                <DropdownItem key="comments" className="text-black">
+                  Most commented
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           </div>
         </TableColumn>
       </TableHeader>

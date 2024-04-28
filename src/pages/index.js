@@ -1,7 +1,11 @@
 import "../app/globals.css";
 import React, { useState } from "react";
 import IssueTable from "@/components/issueTable";
-import { fetchIssuesByFilter, getServerSideProps } from "./api/githubData";
+import {
+  fetchIssuesByFilter,
+  fetchIssuesBySort,
+  getServerSideProps,
+} from "./api/githubData";
 
 const Home = ({ initialIssues, openedCount, closedCount, labels, authors }) => {
   const [issues, setIssues] = useState(initialIssues);
@@ -16,6 +20,16 @@ const Home = ({ initialIssues, openedCount, closedCount, labels, authors }) => {
     }
   };
 
+  const handleSortIssues = async (sortType) => {
+    try {
+      const sortedIssues = await fetchIssuesBySort(sortType);
+
+      setIssues(sortedIssues);
+    } catch (error) {
+      console.error("Error fetching filtered issues:", error);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center p-1">
       <IssueTable
@@ -25,6 +39,7 @@ const Home = ({ initialIssues, openedCount, closedCount, labels, authors }) => {
         labels={labels}
         authors={authors}
         filterIssues={handleFilterChange}
+        sortIssues={handleSortIssues}
       />
     </div>
   );

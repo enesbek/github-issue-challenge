@@ -1,24 +1,38 @@
 const owner = "Trendyol";
 const repo = "baklava";
-const accessToken = "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";
+
+const fetchIssuesFromGithub = async (apiUrl) => {
+  try {
+    const response = await fetch(apiUrl, {
+      headers: {
+        Authorization: `token ${process.env.NEXT_PUBLIC_GITHUB_ACCESS_TOKEN}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch issues from Github API");
+    }
+
+    return await response.json();
+  } catch (error) {
+    throw new Error("Error fetching issues:", error);
+  }
+};
 
 const getIssueData = async () => {
-  const apiUrl = `https://api.github.com/repos/${owner}/${repo}/issues`;
+  const apiUrl = `https://api.github.com/repos/${owner}/${repo}/issues?sort=updated`;
 
-  const response = await fetch(apiUrl, {
-    headers: { Authorization: `token ${accessToken}` },
-  });
-
-  return await response.json();
+  return await fetchIssuesFromGithub(apiUrl);
 };
 
 export async function getServerSideProps(context) {
   try {
-    // Github API'den issues verilerini al
     const issueData = await getIssueData();
 
-    // Github API'den issue sayılarını ve etiketleri al
-    const { openedCount, closedCount, labels, authors } = await getIssueCount();
+    const { openedCount, closedCount } = await getIssueCounts();
+
+    const labels = await getIssueLabels();
+    const authors = await getIssueAuthors();
 
     return {
       props: {
@@ -42,72 +56,47 @@ export async function getServerSideProps(context) {
   }
 }
 
-export async function getIssueCount() {
-  try {
-    const openResponse = await fetch(
-      `https://api.github.com/search/issues?q=repo:${owner}/${repo}+type:issue+state:open&per_page=1`,
-      {
-        headers: { Authorization: `token ${accessToken}` },
-      }
-    );
-    const openData = await openResponse.json();
-    const openedCount = openData.total_count;
+export async function getIssueCounts() {
+  const apiUrlOpen = `https://api.github.com/search/issues?q=repo:${owner}/${repo}+type:issue+state:open&per_page=1`;
 
-    const closedResponse = await fetch(
-      `https://api.github.com/search/issues?q=repo:${owner}/${repo}+type:issue+state:closed&per_page=1`,
-      {
-        headers: { Authorization: `token ${accessToken}` },
-      }
-    );
+  const openedCount = await fetchIssuesFromGithub(apiUrlOpen);
 
-    const labelData = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/labels`,
-      {
-        headers: { Authorization: `token ${accessToken}` },
-      }
-    );
+  const apiUrlClosed = `https://api.github.com/search/issues?q=repo:${owner}/${repo}+type:issue+state:closed&per_page=1`;
 
-    const labels = await labelData.json();
+  const closedCount = await fetchIssuesFromGithub(apiUrlClosed);
 
-    const authorsData = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/contributors`,
-      {
-        headers: { Authorization: `token ${accessToken}` },
-      }
-    );
+  return {
+    openedCount: openedCount.total_count,
+    closedCount: closedCount.total_count,
+  };
+}
 
-    const authors = await authorsData.json();
+async function getIssueLabels() {
+  const apiUrl = `https://api.github.com/repos/${owner}/${repo}/labels`;
 
-    const closedData = await closedResponse.json();
-    const closedCount = closedData.total_count;
+  return await fetchIssuesFromGithub(apiUrl);
+}
 
-    return { openedCount, closedCount, labels, authors };
-  } catch (error) {
-    console.error("Error:", error);
-    return { openedCount: -1, closedCount: -1 };
-  }
+async function getIssueAuthors() {
+  const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contributors`;
+
+  return await fetchIssuesFromGithub(apiUrl);
 }
 
 export async function fetchIssuesByFilter(filter) {
-  try {
-    let apiUrl = `https://api.github.com/repos/${owner}/${repo}/issues`
+  let apiUrl = `https://api.github.com/repos/${owner}/${repo}/issues`;
 
-    if (filter.type === "Author") {
-      apiUrl += `?creator=${filter.value}`;
-    } else if (filter.type === "Label") {
-      apiUrl += `?labels=${filter.value}`;
-    }
-
-    const response = await fetch(apiUrl, {
-      headers: { Authorization: `token ${accessToken}` },
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch issues from Github API");
-    }
-
-    return await response.json();
-  } catch (error) {
-    throw new Error("Error fetching issues:", error);
+  if (filter.type === "Author") {
+    apiUrl += `?creator=${filter.value}`;
+  } else if (filter.type === "Label") {
+    apiUrl += `?labels=${filter.value}`;
   }
+
+  return await fetchIssuesFromGithub(apiUrl);
+}
+
+export async function fetchIssuesBySort(sortType) {
+  let apiUrl = `https://api.github.com/repos/${owner}/${repo}/issues?sort=${sortType}`;
+
+  return await fetchIssuesFromGithub(apiUrl);
 }
