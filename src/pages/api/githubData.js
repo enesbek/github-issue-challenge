@@ -3,11 +3,16 @@ const repo = "baklava";
 
 const fetchIssuesFromGithub = async (apiUrl) => {
   try {
-    const response = await fetch(apiUrl, {
-      headers: {
-        Authorization: `token ${process.env.NEXT_PUBLIC_GITHUB_ACCESS_TOKEN}`,
-      },
-    });
+    const response = await fetch(
+      apiUrl,
+      process.env.NEXT_PUBLIC_GITHUB_ACCESS_TOKEN
+        ? {
+            headers: {
+              Authorization: `token ${process.env.NEXT_PUBLIC_GITHUB_ACCESS_TOKEN}`,
+            },
+          }
+        : {}
+    );
 
     if (!response.ok) {
       throw new Error("Failed to fetch issues from Github API");

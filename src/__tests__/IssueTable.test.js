@@ -68,6 +68,7 @@ describe("IssueTable component", () => {
       default: false,
     },
   ];
+  
   const issues = MockIssues;
   const openedCount = 10;
   const closedCount = 5;
